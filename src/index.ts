@@ -1,13 +1,13 @@
-interface IConfigOption {
+export interface IConfigOption {
   config: (o: any) => any
   [propName: string]: (o: any) => any
 }
 
-type ProviderType = {
+export type ProviderType = {
   [propName: string]: IConfigOption
 } 
 
-type ApiType = { 
+export type ApiType = { 
   [P in keyof ProviderType]: Function
 }
 
@@ -19,12 +19,12 @@ export class Interceptor {
    * @param api 被拦截的api
    * @param provider 
    */
-  static register (api: ApiType, provider: ProviderType) {
+  static register (api: ApiType, provider: ProviderType): ApiType {
     const i = new Interceptor()
     return i.inject(api, provider)
   }
 
-  inject (api: ApiType, provider: ProviderType) {
+  inject (api: ApiType, provider: ProviderType): ApiType {
     const self = this
     const _interceptor = self._interceptor
     const _interceptorMethods = Object.keys(provider)
@@ -48,7 +48,7 @@ export class Interceptor {
           }
         })
       })
-    return _interceptor
+    return <ApiType>_interceptor
   }
 
   async configInject (obj: object, option: IConfigOption) {
